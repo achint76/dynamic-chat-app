@@ -5,6 +5,11 @@ const express = require('express');
 const chatRouter = express();
 const session = require('express-session');
 const ChatController = require('../controllers/chats.controller');
+// Parse JSON-encoded request bodies
+chatRouter.use(express.json());
+
+// Parse URL-encoded request bodies
+chatRouter.use(express.urlencoded({ extended: true }));
 
 // Set up session middleware
 //chatRouter.use(session({ /* session configuration */ }));

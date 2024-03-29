@@ -4,6 +4,7 @@ const ChatService = {
         try{
             
             const messageData = await ChatModel.create(payload);
+            //console.log(messageData,"MSGDATA");
             return messageData;
         }catch(error){
             throw error;

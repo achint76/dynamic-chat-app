@@ -12,6 +12,7 @@ app.use(express.static('public'));
 const userRoute = require('./routers/users.router');
 const chatRoute = require('./routers/chats.router');
 const UserModel = require('./models/users.model');
+const ChatModel = require('./models/chats.model');
 const connect = async () => {
     try {
         await mongoose.connect(process.env.MONGO);
@@ -51,6 +52,22 @@ usp.on('connection', async function (socket) {
     //user broadcast offline status
     socket.broadcast.emit('getOfflineUser', {user_id: userId } );
     
+    })
+
+    //chatting implementation
+    socket.on('newChat', function(data){
+        console.log(data, ">>>DATA");
+        socket.broadcast.emit('loadNewChat', data);
+    })
+
+    //load old chats
+    socket.on('existsChat', async function(data){
+        const chats = await ChatModel.find({ $or: [
+            { sender_id: data.sender_id, receiver_id: data.receiver_id },
+            { sender_id: data.receiver_id, receiver_id: data.sender_id }
+        ]})
+
+        socket.emit('loadChats', { chats: chats });
     })
 
 });
