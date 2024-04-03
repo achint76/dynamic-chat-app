@@ -8364,3 +8364,11 @@ a[data-toggle="collapse"] {
     margin: 10px;
     color: black;
   }
+
+  .fa-trash {
+    color: var(--green);
+  }
+
+  .fa-edit {
+    color: #062c33;
+  }

@@ -14,6 +14,33 @@ const ChatController = {
             console.log("ERROR", error);
             res.status(400).send({ success: false, msg: error.message});
         }
+    },
+    async deleteChat(req, res){
+        try{
+            const chatid = req.query._id;
+            //console.log(chatid,"CONTROLLER")
+            const messageDeleted = await ChatService.deleteChat(chatid);
+            res.status(200).send({ success: true, data: messageDeleted});
+        }catch(error){
+            console.log("ERROR", error);
+            res.status(400).send({ success: false, msg: error.message });
+        }
+    },
+    async updateChat(req, res){
+        try{
+            const chatid = req.body._id;
+            console.log("chatid", chatid);
+            //const updateOptions = {};
+            const updateOptions = {
+                message: req.body.message
+            };
+            const updateMessage = await ChatService.updateChat(chatid, updateOptions);
+            console.log("UPDATEMESSAGE", updateMessage);
+            res.status(200).send({ success: true, data: updateMessage});
+        }catch(error){
+            console.log(error, "ERROR");
+            res.status(400).send({success: false, msg: error.message });
+        }
     }
 };
 module.exports = ChatController;

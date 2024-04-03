@@ -16,6 +16,8 @@ chatRouter.use(express.urlencoded({ extended: true }));
 
 // Define chat routes
 chatRouter.post('/save-chat', ChatController.saveChat);
-
+//route for deleting chats
+chatRouter.put('/delete-chat', ChatController.deleteChat);
+chatRouter.put('/update-chat', ChatController.updateChat);
 // Export the chatRouter module
 module.exports = chatRouter;
