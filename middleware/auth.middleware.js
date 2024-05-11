@@ -2,6 +2,7 @@ const AuthMiddleware = {
     async isLogin(req, res, next){
         try{
             if(req.session.user){
+                console.log('reqsssionuser', req.session.user);
                 next();
             }
             else{

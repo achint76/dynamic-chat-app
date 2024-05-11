@@ -107,203 +107,205 @@
  </div>
 
     <script>
-        const sender_id = '<%= user._id %>';
-        let receiver_id;
-        const socket = io('/user-namespace', {
-            auth: {
-                token: '<%= user._id %>'
-            }
-        });
-        $(document).ready(function () {
-            $('.user-list').click(function () {
+        // const sender_id = '<%= user._id %>';
+        // let receiver_id;
+        // const socket = io('/user-namespace', {
+        //     auth: {
+        //         token: '<%= user._id %>'
+        //     }
+        // });
+        // $(document).ready(function () {
+        //     $('.user-list').click(function () {
 
-                const userId = $(this).attr('data-id');
-                receiver_id = userId;
-                $('.start-head').hide();
-                $('.chat-section').show();
+        //         const userId = $(this).attr('data-id');
+        //         receiver_id = userId;
+        //         $('.start-head').hide();
+        //         $('.chat-section').show();
 
-                //loading old chats
-                socket.emit('existsChat', { sender_id: sender_id, receiver_id: receiver_id });
-            })
-        });
+        //         //loading old chats
+        //         socket.emit('existsChat', { sender_id: sender_id, receiver_id: receiver_id });
+        //     })
+        // });
 
-        //update user online status
-        socket.on('getOnlineUser', function (data) {
-            console.log('Received getOnlineUser event:', data);
-            $('#' + data.user_id + '-status').text('Online');
-            $('#' + data.user_id + '-status').removeClass('offline-status');
-            $('#' + data.user_id + '-status').addClass('online-status');
+        // //update user online status
+        // socket.on('getOnlineUser', function (data) {
+        //     console.log('Received getOnlineUser event:', data);
+        //     $('#' + data.user_id + '-status').text('Online');
+        //     $('#' + data.user_id + '-status').removeClass('offline-status');
+        //     $('#' + data.user_id + '-status').addClass('online-status');
 
-        })
+        // })
 
-        //update user offline status
-        socket.on('getOfflineUser', function (data) {
-            console.log('Received getOfflineUser event:', data);
-            $('#' + data.user_id + '-status').text('Offline');
-            $('#' + data.user_id + '-status').removeClass('online-status');
-            $('#' + data.user_id + '-status').addClass('offline-status');
+        // //update user offline status
+        // socket.on('getOfflineUser', function (data) {
+        //     console.log('Received getOfflineUser event:', data);
+        //     $('#' + data.user_id + '-status').text('Offline');
+        //     $('#' + data.user_id + '-status').removeClass('online-status');
+        //     $('#' + data.user_id + '-status').addClass('offline-status');
 
-        });
+        // });
 
-        //user chat save
-        $('#chat-form').submit(function (event) {
-            event.preventDefault();
+        // //user chat save
+        // $('#chat-form').submit(function (event) {
+        //     event.preventDefault();
 
-            const message = $('#message').val();
-            console.log("senderid receriver id", sender_id, receiver_id, message);
-            $.ajax({
+        //     const message = $('#message').val();
+        //     console.log("senderid receriver id", sender_id, receiver_id, message);
+        //     $.ajax({
 
-                url: '/chat/save-chat',
-                type: 'POST',
-                data: { sender_id: sender_id, receiver_id: receiver_id, message: message },
-                success: function (response) {
-                    console.log(response, "RESPONSE");
-                    if (response.success) {
-                        console.log(response.data.message, "RESPONSE");
-                        $('#message').val('')
-                        let chat = response.data.message;
-                        let html = `<div class="right-chat" id='`+response.data._id+`'>
-                    <h5><span>`+ chat + `</span>
-                        <i class="fa fa-trash" aria-hidden="true" data-id='`+response.data._id+`' data-toggle="modal" data-target="#deleteChatModal"></i>
-                        <i class="fa fa-edit" aria-hidden="true" data-id='`+response.data._id+`' data-msg='`+chat+`' data-toggle="modal" data-target="#editChatModal"></i>
-                        </h5>
-                </div>
-                    `;
-                        $('#chat-container').append(html);
-                        socket.emit('newChat', response.data);
-                        //console.log(response.data, "NEWCHATRESDATA");
-                        scrollChat();
-                    } else {
-                        alert(response.msg);
-                    }
-                }
-            });
+        //         url: '/chat/save-chat',
+        //         type: 'POST',
+        //         data: { sender_id: sender_id, receiver_id: receiver_id, message: message },
+        //         success: function (response) {
+        //             console.log(response, "RESPONSE");
+        //             if (response.success) {
+        //                 console.log(response.data.message, "RESPONSE");
+        //                 $('#message').val('')
+        //                 let chat = response.data.message;
+        //                 let html = `<div class="right-chat" id='`+response.data._id+`'>
+        //             <h5><span>`+ chat + `</span>
+        //                 <i class="fa fa-trash" aria-hidden="true" data-id='`+response.data._id+`' data-toggle="modal" data-target="#deleteChatModal"></i>
+        //                 <i class="fa fa-edit" aria-hidden="true" data-id='`+response.data._id+`' data-msg='`+chat+`' data-toggle="modal" data-target="#editChatModal"></i>
+        //                 </h5>
+        //         </div>
+        //             `;
+        //                 $('#chat-container').append(html);
+        //                 socket.emit('newChat', response.data);
+        //                 //console.log(response.data, "NEWCHATRESDATA");
+        //                 scrollChat();
+        //             } else {
+        //                 alert(response.msg);
+        //             }
+        //         }
+        //     });
 
 
-        })
-        socket.on('loadNewChat', function (data) {
-            console.log(data, ">>LOADNEWCHAT");
-            console.log(sender_id, "SENERID");
-            if (!data.is_deleted && sender_id === data.receiver_id && receiver_id === data.sender_id) {
-                console.log("SUCCESS");
-                let html = `<div class="left-chat" id='`+data._id+`'>
-                    <h5>`+ data.message + `</h5>
-                </div>
-                    `;
-                $('#chat-container').append(html);
+        // })
+        // socket.on('loadNewChat', function (data) {
+        //     console.log(data, ">>LOADNEWCHAT");
+        //     console.log(sender_id, "SENERID");
+        //     if (!data.is_deleted && sender_id === data.receiver_id && receiver_id === data.sender_id) {
+        //         console.log("SUCCESS");
+        //         let html = `<div class="left-chat" id='`+data._id+`'>
+        //             <h5>`+ data.message + `</h5>
+        //         </div>
+        //             `;
+        //         $('#chat-container').append(html);
 
-                scrollChat();
-            }
-        })
+        //         scrollChat();
+        //     }
+        // })
 
-        //loading old chats when switchinguser
-        socket.on('loadChats', function (data) {
-            $('#chat-container').html('');
+        // //loading old chats when switchinguser
+        // socket.on('loadChats', function (data) {
+        //     $('#chat-container').html('');
 
-            const chats = data.chats;
-            let html = '';
-            for (let x = 0; x < chats.length; x++) {
-                if(!chats[x].is_deleted){
-                let addClass = '';
-                if (chats[x]['sender_id'] == sender_id) {
-                    addClass = 'right-chat';
-                } else {
-                    addClass = 'left-chat';
-                }
-                html += `
-                <div class = '`+ addClass + `' id='`+chats[x]['_id']+`'>
-                    <h5><span>`+ chats[x]['message'] + `</span>`;
+        //     const chats = data.chats;
+        //     let html = '';
+        //     for (let x = 0; x < chats.length; x++) {
+        //         if(!chats[x].is_deleted){
+        //         let addClass = '';
+        //         if (chats[x]['sender_id'] == sender_id) {
+        //             addClass = 'right-chat';
+        //         } else {
+        //             addClass = 'left-chat';
+        //         }
+        //         html += `
+        //         <div class = '`+ addClass + `' id='`+chats[x]['_id']+`'>
+        //             <h5><span>`+ chats[x]['message'] + `</span>`;
 
-                if (chats[x]['sender_id'] == sender_id) {
-                    html += `<i class="fa fa-trash" aria-hidden="true" data-id='`+chats[x]['_id']+`' data-toggle="modal" data-target="#deleteChatModal"></i>
-                    <i class="fa fa-edit" aria-hidden="true" data-id='`+chats[x]['_id']+`' data-msg='`+chats[x]['message']+`' data-toggle="modal" data-target="#editChatModal"></i>`;
+        //         if (chats[x]['sender_id'] == sender_id) {
+        //             html += `<i class="fa fa-trash" aria-hidden="true" data-id='`+chats[x]['_id']+`' data-toggle="modal" data-target="#deleteChatModal"></i>
+        //             <i class="fa fa-edit" aria-hidden="true" data-id='`+chats[x]['_id']+`' data-msg='`+chats[x]['message']+`' data-toggle="modal" data-target="#editChatModal"></i>`;
                             
-                }
+        //         }
 
-                html += `
-                    </h5 >
+        //         html += `
+        //             </h5 >
                     
-                    </div >
-                    `;
-            }
-        }
-            $('#chat-container').append(html);
+        //             </div >
+        //             `;
+        //     }
+        // }
+        //     $('#chat-container').append(html);
 
-            scrollChat();
-        })
+        //     scrollChat();
+        // })
 
-        function scrollChat() {
+        // function scrollChat() {
 
-            // console.log("Offset top:", $('#chat-container').offset().top);
-            // console.log("Scroll height:", $('#chat-container')[0].scrollHeight);
-            $('#chat-container').animate({
-                scrollTop:
-                    //$('#chat-container').offset().top +
-                    $('#chat-container')[0].scrollHeight
-            }, 0);
-        }
-        //delete chat work
-        $(document).on('click', '.fa-trash', function(){
-            let msg = $(this).parent().text();
-            $('#delete-message').text(msg);
-            $('#delete-message-id').val($(this).attr('data-id'));
-        })
+        //     // console.log("Offset top:", $('#chat-container').offset().top);
+        //     // console.log("Scroll height:", $('#chat-container')[0].scrollHeight);
+        //     $('#chat-container').animate({
+        //         scrollTop:
+        //             //$('#chat-container').offset().top +
+        //             $('#chat-container')[0].scrollHeight
+        //     }, 0);
+        // }
+        // //delete chat work
+        // $(document).on('click', '.fa-trash', function(){
+        //     let msg = $(this).parent().text();
+        //     $('#delete-message').text(msg);
+        //     $('#delete-message-id').val($(this).attr('data-id'));
+        // })
 
-        $('#delete-chat-form').submit(function(event){
-            event.preventDefault();  //so that form doesn't get refreshed
+        // $('#delete-chat-form').submit(function(event){
+        //     event.preventDefault();  //so that form doesn't get refreshed
 
-            var id = $('#delete-message-id').val();
-            console.log(id,"DASHOARDID");
-            $.ajax({
-                url: '/chat/delete-chat/?_id=' + id,
-                type: 'PUT',
-               // data: { id: id },
-                success: function(res){
-                    if(res.success == true){
-                        $('#'+id).remove();
-                        $('#deleteChatModal').modal('hide');
-                        socket.emit('chatDeleted', id);
-                    }else{
-                        alert(res.msg);
-                    }
-                }
-            })
-        })
+        //     var id = $('#delete-message-id').val();
+        //     console.log(id,"DASHOARDID");
+        //     $.ajax({
+        //         url: '/chat/delete-chat/?_id=' + id,
+        //         type: 'PUT',
+        //        // data: { id: id },
+        //         success: function(res){
+        //             if(res.success == true){
+        //                 $('#'+id).remove();
+        //                 $('#deleteChatModal').modal('hide');
+        //                 socket.emit('chatDeleted', id);
+        //             }else{
+        //                 alert(res.msg);
+        //             }
+        //         }
+        //     })
+        // })
 
-        socket.on('chatMessageDeleted', function(id){
-            $('#'+id).remove();
-        });
+        // socket.on('chatMessageDeleted', function(id){
+        //     $('#'+id).remove();
+        // });
 
-        //update user chat functionality
+        // //update user chat functionality
 
-        $(document).on('click', '.fa-edit', function(){
-            $('#edit-message-id').val( $(this).attr('data-id'));
-            $('#edit-message').val( $(this).attr('data-msg'));
-        });
+        // $(document).on('click', '.fa-edit', function(){
+        //     $('#edit-message-id').val( $(this).attr('data-id'));
+        //     $('#edit-message').val( $(this).attr('data-msg'));
+        // });
 
-        $('#edit-chat-form').submit(function(event){
-            event.preventDefault();
-            var id = $('#edit-message-id').val();
-            var msg = $('#edit-message').val();
-            $.ajax({
-                url: '/chat/update-chat',
-                type: 'PUT',
-                data: { _id: id, message: msg },
-                success: function(res){
-                    if(res.success === true){
-                        $('#editChatModal').modal('hide');
-                        $('#'+id).find('span').text(msg);
-                        $('#'+id).find('.fa-edit').attr('data-msg', msg);
-                        socket.emit('chatUpdated', { _id: id, message: msg });
+        // $('#edit-chat-form').submit(function(event){
+        //     event.preventDefault();
+        //     var id = $('#edit-message-id').val();
+        //     var msg = $('#edit-message').val();
+        //     $.ajax({
+        //         url: '/chat/update-chat',
+        //         type: 'PUT',
+        //         data: { _id: id, message: msg },
+        //         success: function(res){
+        //             if(res.success === true){
+        //                 $('#editChatModal').modal('hide');
+        //                 $('#'+id).find('span').text(msg);
+        //                 $('#'+id).find('.fa-edit').attr('data-msg', msg);
+        //                 socket.emit('chatUpdated', { _id: id, message: msg });
 
-                    }
-                }
-            })
-        })
+        //             }
+        //         }
+        //     })
+        // })
 
-        socket.on('chatMessageUpdated', function(data){
-            $('#'+data._id).find('span').text(data.message);
-        })
+        // socket.on('chatMessageUpdated', function(data){
+        //     $('#'+data._id).find('span').text(data.message);
+        // })
+
+        //---------------separating above code  removing this part and adding in main.js-----------
     </script>
     <%- include('layouts/footer.ejs') %>
 
@@ -311,3 +313,11 @@
     
 
    
+    <!-- function getCookie(name) {
+        let matches = document.cookie.match(new RegExp(
+            "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+        ));
+        return matches ? decodeURIComponent(matches[1]) : undefined;
+    }
+    Get URL Data Script.txt
+    Displaying Get URL Data Script.txt. -->

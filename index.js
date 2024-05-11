@@ -80,6 +80,20 @@ usp.on('connection', async function (socket) {
         socket.broadcast.emit('chatMessageUpdated', data);
     })
 
+
+    //new group chat added
+    socket.on('newGroupChat', function(data){
+        socket.broadcast.emit('loadNewGroupChat', data)
+    })
+
+    socket.on('groupChatDeleted', function(id){
+        socket.broadcast.emit('groupChatMessageDeleted', id);  //broadcast chat deleted id
+    })
+
+
+    socket.on('groupChatUpdated', function(data){
+        socket.broadcast.emit('groupChatMessageUpdated', data);
+    })
 });
 // app.listen(port, ()=> {
 //     connect();
